@@ -34,25 +34,25 @@ plot(plotData4)
 
 % calculate Median Absolut Deviation (MAD) based on time poins, for K
 % signals
+windowSize = 5;
 sampleNum = 5;
 singalSize = length(data(:,1));
 dataSetSize = length(data(1,:));
 
-for i = 1:5 %dataSetSize % run through the data set
+for i = 1:dataSetSize % run through the data set
     counter = 1;
     
     for j = 1:singalSize %run through every signal (20 sec)
-        windowsMedian(counter) = median(data(j, i:i+sampleNum)); % median of the n sample numbers
-        
+        windowsMedian(counter) = median(data(j,i:i+sampleNum)); % median of the k window  edo eimai
         windowCounter = 1;
         newWindow = zeros(1,k);
         
-        for k = sampleNum:-1:1
-            newWindow(windowCounter) = abs(data(j,k) - windowsMedian(counter));
+        for k = windowSize:-1:0
+            newWindow(windowCounter) = abs(data(j-k,i) - windowsMedian(counter));
             windowCounter = windowCounter + 1;
         end
         
-        MAD(i,counter) = median(newWindow); % MAD[r,c] -> c are the data points within a 20 sec signal
+        MAD(counter) = median(newWindow);
         counter = counter + 1;
     end
         
