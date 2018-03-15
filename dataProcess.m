@@ -1,11 +1,11 @@
 testfiledir1 = '/home/saias/Documents/composition/acoustic data/acoustic 1';
-testfiledir2 = '/home/doltsinis/Documents/Composition/acoustic data/acoustic 2';
-testfiledir4 = '/home/doltsinis/Documents/Composition/acoustic data/acoustic 4';
+testfiledir2 = '/home/saias/Documents/composition/acoustic data/acoustic 2';
+testfiledir4 = '/home/saias/Documents/composition/acoustic data/acoustic 4';
 
 wavfiles = dir(fullfile(testfiledir1, '*.wav'));
 nfiles = length(wavfiles);
 %data  = cell(nfiles);
-for i = 1 : floor(nfiles/40)
+for i = 1 : floor(nfiles/10)
    %fid = fopen( fullfile(testfiledir, matfiles(i).name) );
    %data{i} = fscanf(fid,'%c');
    i
@@ -13,9 +13,9 @@ for i = 1 : floor(nfiles/40)
    %fclose(fid);
 end
 
-data1 = data;
-data2 = data;
-data4 = data;
+data1 = data(40000:end,:);
+data2 = data(40000:end,:);
+data4 = data(40000:end,:);
 
 % visualization 
 plotData1 = [data1(:,15); data1(end,15)*ones(1000000,1); data1(:,16); data1(end,16)*ones(1000000,1); data1(:,17)];
@@ -34,30 +34,56 @@ plot(plotData4)
 
 % calculate Median Absolut Deviation (MAD) based on time poins, for K
 % signals
+data = data1;
 sampleNum = 5;
 singalSize = length(data(:,1));
 dataSetSize = length(data(1,:));
+%dataSetSize = 10;
+num = 1;
+numAlt = 1;
 
-for i = 1:5 %dataSetSize % run through the data set
+
+for i = 1:dataSetSize % run through the data set
     counter = 1;
     
     for j = 1:singalSize %run through every signal (20 sec)
-        windowsMedian(counter) = median(data(j, i:i+sampleNum)); % median of the n sample numbers
+        windowsMedian = median(data(j, i:i+sampleNum)); % median of the n sample numbers
+        MAD(i,counter) = median(abs(data(j, i:i+sampleNum) - windowsMedian ));
         
-        windowCounter = 1;
-        newWindow = zeros(1,k);
+
+        %modZ(i,counter) = (data(j, i:i+sampleNum) - windowsMedian)/1.4826*MAD(i,counter);
+
+     
+        AltwindowsMedian = median(data(j, i:i+sampleNum)); % median of the n sample numbers
+        AltMAD(i,counter) = median(abs(data(j, 1:i+sampleNum) - AltwindowsMedian ));
+        %modZAlt(i,counter) = (data(j, 1:i+sampleNum) - median(data(j, 1:i+sampleNum)) )/1.4826*AltMAD(i,counter);
+   
+
+
         
-        for k = sampleNum:-1:1
-            newWindow(windowCounter) = abs(data(j,k) - windowsMedian(counter));
-            windowCounter = windowCounter + 1;
-        end
+ % MAD[r,c] -> c are the data points within a 20 sec signal
+ 
+        %if abs(modZ(i,counter)) > 3  
+         %   SampleAbnormalities(num) = i;
+          %  Abnormalities(num) = j;
+          %  num = num +1
+        %end
         
-        MAD(i,counter) = median(newWindow); % MAD[r,c] -> c are the data points within a 20 sec signal
+       % if abs(modZAlt(i,counter)) > 3
+         %   SampleAbnormalitiesAlt(num) = i;
+         %   AbnormalitiesAlt(num) = j;
+        %    numAlt = numAlt +1
+       % end
+        
+        
         counter = counter + 1;
     end
+        i
         
 end
 
+
+
 % calculate LOF (Local Outlier Factor)
 
-
+boxplot(AltMAD(:,randi(160,10,1)))
