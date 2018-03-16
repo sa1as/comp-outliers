@@ -1,5 +1,6 @@
 for i=1:length(data(1,:))
-   energy(i) = sum(abs(data(:,i)));    
+    energy(i)= sumabs(data(:,i).^2)/(length(data(:,i)));
+    skew(i) = skewness( data(:,i) );%/length(Signal);
 end
 
 
@@ -7,14 +8,24 @@ end
 %dataset.testx = randi(200,10,1);
 
 
-for i = 1:length(energy)
-
-    dataset.trainx = energy(i:i+10)';
-    dataset.testx = energy(i+11)';
-    
-    params.minptslb = 10;
-    params.minptsub = 10;
+for j=5:20
+    params.minptslb = j;
+    params.minptsub = j;
     params.theta = 2;
+
+    for i = 1:length(energy)-j-1
+
+        dataset.trainx = [energy(1, (i:i+j) )' skew(1, (i:i+j) )'];
     
-    results(i) = LocalOutlierFactor(dataset, params);
+        dataset.testx = [energy(1, (i+j+1) )' skew(1, (i+j+1) )'];
+        %dataset.testx = energy(i+11)';
+    
+
+     results{j}(i) = LocalOutlierFactor(dataset, params);
+    end
+    outNum(j-4) = sum([results{1, j}.y]) - length([results{1, j}.y]);
 end
+bar(outNum)
+
+
+

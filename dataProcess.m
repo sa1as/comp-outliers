@@ -5,7 +5,7 @@ testfiledir4 = '/home/saias/Documents/composition/acoustic data/acoustic 4';
 wavfiles = dir(fullfile(testfiledir1, '*.wav'));
 nfiles = length(wavfiles);
 %data  = cell(nfiles);
-for i = 1 : floor(nfiles/10)
+for i = 1 : floor(nfiles/2)
    %fid = fopen( fullfile(testfiledir, matfiles(i).name) );
    %data{i} = fscanf(fid,'%c');
    i
