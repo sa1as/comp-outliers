@@ -34,7 +34,7 @@ plot(plotData4)
 
 % calculate Median Absolut Deviation (MAD) based on time poins, for K
 % signals
-data = data1;
+%data = data1;
 sampleNum = 5;
 singalSize = length(data(:,1));
 dataSetSize = length(data(1,:));
@@ -43,7 +43,7 @@ num = 1;
 numAlt = 1;
 
 
-for i = 1:dataSetSize % run through the data set
+for i = 1:150 % run through the data set
     counter = 1;
     
     for j = 1:singalSize %run through every signal (20 sec)
